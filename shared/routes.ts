@@ -8,6 +8,7 @@ export const api = {
       path: '/api/chat',
       input: z.object({
         message: z.string(),
+        class: z.enum(['9', '10', '11', '12']).optional(),
       }),
       responses: {
         200: z.object({

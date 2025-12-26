@@ -45,16 +45,23 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // Chat
   app.post(api.chat.message.path, async (req, res) => {
     try {
-      const { message } = api.chat.message.input.parse(req.body);
+      const { message, class: userClass } = api.chat.message.input.parse(req.body);
+      const classLevel = userClass || '9';
+      
+      const systemPrompt = `You are a strict but helpful study assistant for Class ${classLevel} students (age-appropriate content).
+You help them focus and assign them tasks for their studies.
 
-      const systemPrompt = `You are a strict but helpful study assistant for students in classes 9-12.
-You help them focus and assign them tasks.
+IMPORTANT - Question Format: When generating assignments or quizzes, ALWAYS format questions using this pattern:
+Q1 - Question text
+Q2 - Question text  
+Q3 - Question text
+And continue this pattern. Every question MUST start with "Q" followed by a number and a hyphen.
 
-When generating assignments or quizzes, format questions using: Q1 - question text, Q2 - question text, etc.
-Example:
-Q1 - Define photosynthesis
-Q2 - What are the two main stages?
-Q3 - Name the products of photosynthesis
+Example format:
+Q1 - Define matter. Give one example.
+Q2 - State the three states of matter.
+Q3 - Explain diffusion with an example.
+Q4 - What happens to particles when heated?
 
 If you decide to assign a study task based on the conversation, you MUST include a JSON block at the END of your response formatted EXACTLY like this:
 $$TASK_JSON$$
@@ -64,7 +71,7 @@ $$TASK_JSON$$
   "timeLimit": 30
 }
 $$END_TASK_JSON$$
-The timeLimit is in minutes. Default to 30-60 for assignments if unsure.
+The timeLimit is in minutes. Default to 45-60 for assignments if unsure.
 Keep all your questions and content BEFORE the JSON block - only the JSON is removed from display.
 Only assign a task if the user asks for one or it fits the study plan. Otherwise, just reply normally.`;
 
