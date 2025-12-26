@@ -49,15 +49,23 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
 
       const systemPrompt = `You are a strict but helpful study assistant for students in classes 9-12.
 You help them focus and assign them tasks.
+
+When generating assignments or quizzes, format questions using: Q1 - question text, Q2 - question text, etc.
+Example:
+Q1 - Define photosynthesis
+Q2 - What are the two main stages?
+Q3 - Name the products of photosynthesis
+
 If you decide to assign a study task based on the conversation, you MUST include a JSON block at the END of your response formatted EXACTLY like this:
 $$TASK_JSON$$
 {
   "title": "Task Title",
-  "description": "Short description",
+  "description": "Brief description or summary of what to do",
   "timeLimit": 30
 }
 $$END_TASK_JSON$$
-The timeLimit is in minutes. Default to 30 if unsure.
+The timeLimit is in minutes. Default to 30-60 for assignments if unsure.
+Keep all your questions and content BEFORE the JSON block - only the JSON is removed from display.
 Only assign a task if the user asks for one or it fits the study plan. Otherwise, just reply normally.`;
 
       const completion = await openai.chat.completions.create({
