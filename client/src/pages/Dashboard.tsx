@@ -4,9 +4,26 @@ import { ChatInterface } from "@/components/ChatInterface";
 import { useTasks } from "@/hooks/use-tasks";
 import { BookOpen, ListTodo } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const { data: tasks, isLoading } = useTasks();
+  const [selectedClass, setSelectedClass] = useState<'9' | '10' | '11' | '12'>('9');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('selectedClass');
+    if (stored && ['9', '10', '11', '12'].includes(stored)) {
+      setSelectedClass(stored as '9' | '10' | '11' | '12');
+    } else {
+      setSelectedClass('9');
+      localStorage.setItem('selectedClass', '9');
+    }
+  }, []);
+
+  const handleClassChange = (newClass: '9' | '10' | '11' | '12') => {
+    setSelectedClass(newClass);
+    localStorage.setItem('selectedClass', newClass);
+  }
 
   const activeTasks = tasks?.filter(t => !t.completed) || [];
   const completedTasks = tasks?.filter(t => t.completed) || [];
@@ -73,16 +90,24 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* User Profile / Footer Area */}
-        <div className="p-4 border-t border-border/40 bg-background/50 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center text-white font-bold font-display shadow-lg shadow-primary/20">
-              S
-            </div>
-            <div>
-              <p className="font-semibold text-sm">Student Account</p>
-              <p className="text-xs text-muted-foreground">Class 12 - Science</p>
-            </div>
+        {/* Class Selector */}
+        <div className="p-4 border-t border-border/40 bg-background/50 backdrop-blur-md space-y-3">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Select Your Class</p>
+          <div className="grid grid-cols-2 gap-2">
+            {(['9', '10', '11', '12'] as const).map((cls) => (
+              <button
+                key={cls}
+                onClick={() => handleClassChange(cls)}
+                data-testid={`button-class-${cls}`}
+                className={`py-2 px-3 rounded-lg font-semibold text-sm transition-colors ${
+                  selectedClass === cls
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground hover:bg-accent/20 hover:text-accent'
+                }`}
+              >
+                Class {cls}
+              </button>
+            ))}
           </div>
         </div>
       </aside>

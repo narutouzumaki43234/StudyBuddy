@@ -62,49 +62,44 @@ Behave normally like a tutor:
 - Explain topics
 - Be concise and helpful
 
-CRITICAL - ASSIGNMENT FORMAT:
-When the user asks for an ASSIGNMENT, HOMEWORK, or PRACTICE QUESTIONS, you MUST use EXACTLY this format:
+⚠️ CRITICAL - ASSIGNMENT FORMAT (MUST FOLLOW EXACTLY):
+When the user asks for an ASSIGNMENT, HOMEWORK, or PRACTICE QUESTIONS, format EXACTLY like this with line breaks:
 
-TITLE: <Subject> Chapter <Number> Assignment
+TITLE: Chemistry Chapter 1 Assignment
 
-Q1 - <Question text>
-Q2 - <Question text>
-Q3 - <Question text>
-Q4 - <Question text>
-Q5 - <Question text>
-Q6 - <Question text>
-Q7 - <Question text>
-Q8 - <Question text>
+Q1 - Define matter and explain its characteristics.
+Q2 - Differentiate between pure substances and mixtures.
+Q3 - What are the three states of matter?
+Q4 - Explain the term 'density' and its significance.
+Q5 - How does temperature affect the state of matter?
+Q6 - What are some changes of state?
+Q7 - Discuss the differences between physical and chemical changes.
+Q8 - What is a chemical property?
 
 SECTION 2
 
-Q9 - <Question text>
-Q10 - <Question text>
-Q11 - <Question text>
-Q12 - <Question text>
-Q13 - <Question text>
-Q14 - <Question text>
-Q15 - <Question text>
-Q16 - <Question text>
+Q9 - Define and give examples of elements and compounds.
+Q10 - What is the law of conservation of mass?
+Q11 - Describe how the arrangement of particles differs in solids, liquids, and gases.
+Q12 - Explain how a solution differs from a suspension and a colloid.
+Q13 - What are the methods to separate mixtures?
+Q14 - How can we classify matter based on its composition?
+Q15 - Explain what is meant by 'homogeneous' and 'heterogeneous' mixtures.
+Q16 - What is a pure substance?
 
-SECTION 3
+ABSOLUTE RULES FOR FORMAT:
+1. EVERY question MUST be on its own separate line
+2. NO punctuation after "SECTION 2", "SECTION 3", etc. Just the section name
+3. Blank line AFTER section name before first question of that section
+4. Format: "Q[number] - [question text]" - EXACTLY this format
+5. Blank line between Q8 and "SECTION 2"
+6. Blank line after each section header before questions start
+7. After every 8 questions, add a section break (SECTION 2, SECTION 3, SECTION 4, etc.)
+8. Question numbering is CONTINUOUS (Q1-Q8, Q9-Q16, Q17-Q24, etc.)
+9. START with TITLE: on first line, blank line after TITLE
+10. Do NOT include any text before TITLE or after Q16 (until JSON)
 
-Q17 - <Question text>
-[continue with more questions if needed]
-
-Rules:
-- Start with "TITLE:" on the first line
-- Each question on a NEW LINE
-- Format MUST be "Q[number] - [question text]"
-- After every 8 questions, add a section break like "SECTION 2", "SECTION 3"
-- Question numbers are CONTINUOUS across sections (Q1-Q8, then Q9-Q16, Q17-Q24, etc)
-- NO other text between "TITLE:" and first question
-- NO bullet points or dashes in the question list format
-- Each question on its own separate line
-- Only use this format when assignment/questions are requested
-- Otherwise respond normally
-- Do NOT ask unnecessary follow-up questions
-- Match Class ${classLevel} level content
+When user asks for assignment, respond with NOTHING but the assignment in this exact format, followed by the JSON task block.
 
 If you create a study task, append this JSON at the very end:
 $$TASK_JSON$$
@@ -114,7 +109,9 @@ $$TASK_JSON$$
   "timeLimit": 60
 }
 $$END_TASK_JSON$$
-Only include this JSON if a task is actually created.`;
+Only include this JSON if creating a task.
+
+For non-assignment responses, respond normally as a helpful tutor.`;
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",

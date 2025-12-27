@@ -31,7 +31,8 @@ export function useChat() {
       };
       setMessages(prev => [...prev, userMsg]);
 
-      const validated = api.chat.message.input.parse({ message: messageText });
+      const selectedClass = (localStorage.getItem('selectedClass') || '9') as '9' | '10' | '11' | '12';
+      const validated = api.chat.message.input.parse({ message: messageText, class: selectedClass });
       const res = await fetch(api.chat.message.path, {
         method: api.chat.message.method,
         headers: { "Content-Type": "application/json" },
