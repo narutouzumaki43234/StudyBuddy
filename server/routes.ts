@@ -60,28 +60,41 @@ export async function registerRoutes(
 When responding normally: Answer questions, explain topics, be helpful.
 
 ASSIGNMENT FORMAT (When user asks for assignment/homework/practice questions):
-Use this EXACT format with pipe symbols | to separate items:
+Format assignments professionally with clear structure:
 
-TITLE: Subject Chapter Number Assignment|Q1 - Question text|Q2 - Question text|Q3 - Question text|Q4 - Question text|Q5 - Question text|Q6 - Question text|Q7 - Question text|Q8 - Question text|SECTION 2|Q9 - Question text|Q10 - Question text|Q11 - Question text|Q12 - Question text|Q13 - Question text|Q14 - Question text|Q15 - Question text|Q16 - Question text
+TITLE: Subject Chapter Number Assignment
+
+Section Header (e.g., "A. Very Short Answer Questions" or "Section 1: Conceptual Questions")
+
+1. First question
+2. Second question
+3. Third question
+...
+(Continue up to 8 questions)
+
+SECTION 2
+Section Header (e.g., "B. Short Answer Questions")
+
+9. Question 9
+10. Question 10
+... (continue through Q16)
 
 RULES:
-- Separate EVERYTHING with | symbol (pipe)
-- Format: "Q1 - question text" (with hyphen and space)
-- After Q8, put "SECTION 2" then continue numbering Q9, Q10, etc
-- After Q16, put "SECTION 3" then continue with Q17, Q18, etc
-- NO other text before TITLE or after questions (except JSON)
+- Start with TITLE: on first line with assignment name
+- Use clear section headers with letters or numbers
+- Number questions consecutively (Q1-Q8, then Q9-Q16)
+- Each question on its own line
+- Add proper spacing between sections
+- Be descriptive and clear
 
 After the assignment, add:
 $$TASK_JSON$$
 {
-  "title": "Assignment",
+  "title": "Assignment Title",
   "description": "Complete the assignment",
   "timeLimit": 60
 }
 $$END_TASK_JSON$$
-
-Example format:
-TITLE: Chemistry Chapter 1|Q1 - Define matter|Q2 - State three states|Q3 - Explain density|Q4 - Temperature effects|Q5 - Changes of state|Q6 - Physical vs chemical|Q7 - Chemical properties|Q8 - Elements and compounds|SECTION 2|Q9 - Conservation of mass|Q10 - Particle arrangement|...
 
 For normal tutoring, respond naturally without this format.`;
 
