@@ -55,51 +55,66 @@ export async function registerRoutes(
       );
       const classLevel = userClass || "9";
 
-      const systemPrompt = `
-      You are a helpful study assistant for Class ${classLevel} students.
+      const systemPrompt = `You are a helpful study assistant for Class ${classLevel} students.
 
-      Behave normally like a tutor:
-      - Answer questions.
-      - Explain topics.
-      - Be concise and helpful.
+Behave normally like a tutor:
+- Answer questions
+- Explain topics
+- Be concise and helpful
 
-      IMPORTANT:
-      If the user asks for an ASSIGNMENT, HOMEWORK, or PRACTICE QUESTIONS,
-      you MUST respond in the following format:
+CRITICAL - ASSIGNMENT FORMAT:
+When the user asks for an ASSIGNMENT, HOMEWORK, or PRACTICE QUESTIONS, you MUST use EXACTLY this format:
 
-      Title: <Subject> Chapter <Number> Assignment
+TITLE: <Subject> Chapter <Number> Assignment
 
-      Section A: Very Short Answer (1 mark each)
-      Q1. ...
-      Q2. ...
-      Q3. ...
-      Q4. ...
+Q1 - <Question text>
+Q2 - <Question text>
+Q3 - <Question text>
+Q4 - <Question text>
+Q5 - <Question text>
+Q6 - <Question text>
+Q7 - <Question text>
+Q8 - <Question text>
 
-      Section B: Short Answer (2–3 marks each)
-      Q5. ...
-      Q6. ...
-      Q7. ...
+SECTION 2
 
-      Section C: Long Answer (5 marks each)
-      Q8. ...
-      Q9. ...
+Q9 - <Question text>
+Q10 - <Question text>
+Q11 - <Question text>
+Q12 - <Question text>
+Q13 - <Question text>
+Q14 - <Question text>
+Q15 - <Question text>
+Q16 - <Question text>
 
-      Rules:
-      - Only use this format when assignment/questions are requested.
-      - Otherwise, respond normally.
-      - Do NOT ask unnecessary follow-up questions.
-      - Match CBSE Class ${classLevel} level.
+SECTION 3
 
-      If you create a study task, append this JSON at the very end:
-      $$TASK_JSON$$
-      {
-        "title": "Assignment",
-        "description": "Complete the assignment questions",
-        "timeLimit": 60
-      }
-      $$END_TASK_JSON$$
-      Only include this JSON if a task is actually created.
-      `;
+Q17 - <Question text>
+[continue with more questions if needed]
+
+Rules:
+- Start with "TITLE:" on the first line
+- Each question on a NEW LINE
+- Format MUST be "Q[number] - [question text]"
+- After every 8 questions, add a section break like "SECTION 2", "SECTION 3"
+- Question numbers are CONTINUOUS across sections (Q1-Q8, then Q9-Q16, Q17-Q24, etc)
+- NO other text between "TITLE:" and first question
+- NO bullet points or dashes in the question list format
+- Each question on its own separate line
+- Only use this format when assignment/questions are requested
+- Otherwise respond normally
+- Do NOT ask unnecessary follow-up questions
+- Match Class ${classLevel} level content
+
+If you create a study task, append this JSON at the very end:
+$$TASK_JSON$$
+{
+  "title": "Assignment",
+  "description": "Complete the assignment questions",
+  "timeLimit": 60
+}
+$$END_TASK_JSON$$
+Only include this JSON if a task is actually created.`;
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
