@@ -59,47 +59,19 @@ export async function registerRoutes(
 
 When responding normally: Answer questions, explain topics, be helpful.
 
-🔴 CRITICAL - ASSIGNMENT FORMAT INSTRUCTIONS:
-When user asks for ASSIGNMENT/HOMEWORK/PRACTICE QUESTIONS, respond EXACTLY like this:
+ASSIGNMENT FORMAT (When user asks for assignment/homework/practice questions):
+Use this EXACT format with pipe symbols | to separate items:
 
-START OUTPUT WITH THIS EXACT PATTERN - DO NOT DEVIATE:
----
-TITLE: Chemistry Chapter 1 Assignment
-(BLANK LINE)
-Q1 - Define matter and explain its characteristics.
-Q2 - Differentiate between pure substances and mixtures.
-Q3 - What are the three states of matter?
-Q4 - Explain the term 'density' and its significance.
-Q5 - How does temperature affect the state of matter?
-Q6 - What are some changes of state?
-Q7 - Discuss the differences between physical and chemical changes.
-Q8 - What is a chemical property?
-(BLANK LINE)
-SECTION 2
-(BLANK LINE)
-Q9 - Define and give examples of elements and compounds.
-Q10 - What is the law of conservation of mass?
-Q11 - Describe how the arrangement of particles differs in solids, liquids, and gases.
-Q12 - Explain how a solution differs from a suspension and a colloid.
-Q13 - What are the methods to separate mixtures?
-Q14 - How can we classify matter based on its composition?
-Q15 - Explain what is meant by 'homogeneous' and 'heterogeneous' mixtures.
-Q16 - What is a pure substance?
----
+TITLE: Subject Chapter Number Assignment|Q1 - Question text|Q2 - Question text|Q3 - Question text|Q4 - Question text|Q5 - Question text|Q6 - Question text|Q7 - Question text|Q8 - Question text|SECTION 2|Q9 - Question text|Q10 - Question text|Q11 - Question text|Q12 - Question text|Q13 - Question text|Q14 - Question text|Q15 - Question text|Q16 - Question text
 
-MANDATORY RULES - BREAK ANY OF THESE AND YOU FAIL:
-1. Each question on SEPARATE LINE (after pressing Enter)
-2. Format exactly "Q1 - text" NOT "Q1. text" NOT "Q1 text"
-3. BLANK LINE between groups (after Q8, after Q16, etc)
-4. BLANK LINE after "TITLE:" before Q1
-5. BLANK LINE after "SECTION 2" before Q9
-6. SECTION HEADERS: "SECTION 2", "SECTION 3" (no punctuation, just the name)
-7. Questions 1-8, then SECTION 2, then 9-16, then SECTION 3, then 17-24, etc.
-8. DO NOT put multiple questions on one line
-9. DO NOT combine text and questions - ONLY questions in this format
-10. After last question, include the JSON task block
+RULES:
+- Separate EVERYTHING with | symbol (pipe)
+- Format: "Q1 - question text" (with hyphen and space)
+- After Q8, put "SECTION 2" then continue numbering Q9, Q10, etc
+- After Q16, put "SECTION 3" then continue with Q17, Q18, etc
+- NO other text before TITLE or after questions (except JSON)
 
-AFTER QUESTIONS, ADD:
+After the assignment, add:
 $$TASK_JSON$$
 {
   "title": "Assignment",
@@ -108,7 +80,10 @@ $$TASK_JSON$$
 }
 $$END_TASK_JSON$$
 
-For normal tutoring (not assignments), respond naturally without this format.`;
+Example format:
+TITLE: Chemistry Chapter 1|Q1 - Define matter|Q2 - State three states|Q3 - Explain density|Q4 - Temperature effects|Q5 - Changes of state|Q6 - Physical vs chemical|Q7 - Chemical properties|Q8 - Elements and compounds|SECTION 2|Q9 - Conservation of mass|Q10 - Particle arrangement|...
+
+For normal tutoring, respond naturally without this format.`;
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
@@ -139,6 +114,11 @@ For normal tutoring (not assignments), respond naturally without this format.`;
         } catch (e) {
           console.error("Failed to parse task JSON", e);
         }
+      }
+
+      // Format assignment if it contains pipe-separated content
+      if (finalMessage.includes("|")) {
+        finalMessage = finalMessage.split("|").join("\n");
       }
 
       res.json({
