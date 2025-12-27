@@ -116,8 +116,12 @@ For normal tutoring, respond naturally without this format.`;
         }
       }
 
-      // Format assignment: detect TITLE: pattern and split on Q1, Q2, etc
-      if (finalMessage.includes("TITLE:") && finalMessage.includes("Q1")) {
+      // Format assignment: replace pipes with newlines if present
+      if (finalMessage.includes("|")) {
+        finalMessage = finalMessage.replace(/\|/g, "\n");
+      }
+      // Also format by splitting on Q patterns if no pipes were found
+      else if (finalMessage.includes("TITLE:") && finalMessage.includes("Q1")) {
         // Split on pattern "Q[number] -" and rejoin with newlines
         const lines = finalMessage.split(/(?=Q\d+\s*-|SECTION\s+\d+|TITLE:)/);
         finalMessage = lines.map(line => line.trim()).filter(line => line).join("\n");
