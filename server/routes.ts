@@ -116,9 +116,11 @@ For normal tutoring, respond naturally without this format.`;
         }
       }
 
-      // Format assignment if it contains pipe-separated content
-      if (finalMessage.includes("|")) {
-        finalMessage = finalMessage.split("|").join("\n");
+      // Format assignment: detect TITLE: pattern and split on Q1, Q2, etc
+      if (finalMessage.includes("TITLE:") && finalMessage.includes("Q1")) {
+        // Split on pattern "Q[number] -" and rejoin with newlines
+        const lines = finalMessage.split(/(?=Q\d+\s*-|SECTION\s+\d+|TITLE:)/);
+        finalMessage = lines.map(line => line.trim()).filter(line => line).join("\n");
       }
 
       res.json({
