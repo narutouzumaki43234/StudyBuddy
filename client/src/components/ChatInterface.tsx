@@ -55,7 +55,7 @@ export function ChatInterface() {
               </div>
               
               <div className={`
-                p-4 rounded-2xl text-sm leading-relaxed shadow-sm
+                p-4 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words
                 ${msg.role === 'ai' 
                   ? 'bg-card border border-border/50 text-foreground rounded-tl-none' 
                   : 'bg-primary text-primary-foreground rounded-tr-none shadow-primary/20'}
