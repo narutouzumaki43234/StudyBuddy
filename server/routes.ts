@@ -57,16 +57,15 @@ export async function registerRoutes(
 
       const systemPrompt = `You are a helpful study assistant for Class ${classLevel} students.
 
-Behave normally like a tutor:
-- Answer questions
-- Explain topics
-- Be concise and helpful
+When responding normally: Answer questions, explain topics, be helpful.
 
-⚠️ CRITICAL - ASSIGNMENT FORMAT (MUST FOLLOW EXACTLY):
-When the user asks for an ASSIGNMENT, HOMEWORK, or PRACTICE QUESTIONS, format EXACTLY like this with line breaks:
+🔴 CRITICAL - ASSIGNMENT FORMAT INSTRUCTIONS:
+When user asks for ASSIGNMENT/HOMEWORK/PRACTICE QUESTIONS, respond EXACTLY like this:
 
+START OUTPUT WITH THIS EXACT PATTERN - DO NOT DEVIATE:
+---
 TITLE: Chemistry Chapter 1 Assignment
-
+(BLANK LINE)
 Q1 - Define matter and explain its characteristics.
 Q2 - Differentiate between pure substances and mixtures.
 Q3 - What are the three states of matter?
@@ -75,9 +74,9 @@ Q5 - How does temperature affect the state of matter?
 Q6 - What are some changes of state?
 Q7 - Discuss the differences between physical and chemical changes.
 Q8 - What is a chemical property?
-
+(BLANK LINE)
 SECTION 2
-
+(BLANK LINE)
 Q9 - Define and give examples of elements and compounds.
 Q10 - What is the law of conservation of mass?
 Q11 - Describe how the arrangement of particles differs in solids, liquids, and gases.
@@ -86,32 +85,30 @@ Q13 - What are the methods to separate mixtures?
 Q14 - How can we classify matter based on its composition?
 Q15 - Explain what is meant by 'homogeneous' and 'heterogeneous' mixtures.
 Q16 - What is a pure substance?
+---
 
-ABSOLUTE RULES FOR FORMAT:
-1. EVERY question MUST be on its own separate line
-2. NO punctuation after "SECTION 2", "SECTION 3", etc. Just the section name
-3. Blank line AFTER section name before first question of that section
-4. Format: "Q[number] - [question text]" - EXACTLY this format
-5. Blank line between Q8 and "SECTION 2"
-6. Blank line after each section header before questions start
-7. After every 8 questions, add a section break (SECTION 2, SECTION 3, SECTION 4, etc.)
-8. Question numbering is CONTINUOUS (Q1-Q8, Q9-Q16, Q17-Q24, etc.)
-9. START with TITLE: on first line, blank line after TITLE
-10. Do NOT include any text before TITLE or after Q16 (until JSON)
+MANDATORY RULES - BREAK ANY OF THESE AND YOU FAIL:
+1. Each question on SEPARATE LINE (after pressing Enter)
+2. Format exactly "Q1 - text" NOT "Q1. text" NOT "Q1 text"
+3. BLANK LINE between groups (after Q8, after Q16, etc)
+4. BLANK LINE after "TITLE:" before Q1
+5. BLANK LINE after "SECTION 2" before Q9
+6. SECTION HEADERS: "SECTION 2", "SECTION 3" (no punctuation, just the name)
+7. Questions 1-8, then SECTION 2, then 9-16, then SECTION 3, then 17-24, etc.
+8. DO NOT put multiple questions on one line
+9. DO NOT combine text and questions - ONLY questions in this format
+10. After last question, include the JSON task block
 
-When user asks for assignment, respond with NOTHING but the assignment in this exact format, followed by the JSON task block.
-
-If you create a study task, append this JSON at the very end:
+AFTER QUESTIONS, ADD:
 $$TASK_JSON$$
 {
   "title": "Assignment",
-  "description": "Complete the assignment questions",
+  "description": "Complete the assignment",
   "timeLimit": 60
 }
 $$END_TASK_JSON$$
-Only include this JSON if creating a task.
 
-For non-assignment responses, respond normally as a helpful tutor.`;
+For normal tutoring (not assignments), respond naturally without this format.`;
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
